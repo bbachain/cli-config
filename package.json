@@ -8,11 +8,10 @@
   "license": "MIT",
   "keywords": [
     "socean.fi",
-    "staking",
     "solana",
     "blockchain",
     "typescript",
-    "SDK"
+    "CLI"
   ],
   "type": "module",
   "main": "./dist/cjs/index.js",
