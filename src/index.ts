@@ -1,6 +1,7 @@
 import type { Commitment } from "@solana/web3.js";
 import { Connection, Keypair } from "@solana/web3.js";
 import { readFileSync, writeFileSync } from "fs";
+import { homedir } from "os";
 import { parse, stringify } from "yaml";
 
 /**
@@ -27,6 +28,7 @@ export const SOLANA_CLI_CONFIG_RAW_DEFAULT: SolanaCliConfigRaw = {
 function deriveWebsocketUrl(jsonRpcUrl: URL): URL {
   const protocol = jsonRpcUrl.protocol === "http:" ? "ws:" : "wss:";
   const portString = jsonRpcUrl.port ? `:${Number(jsonRpcUrl.port) + 1}` : "";
+  // Note trailing / (IMPORTANT)
   return new URL(`${protocol}//${jsonRpcUrl.hostname}${portString}/`);
 }
 
@@ -39,11 +41,12 @@ function isDerivedWebsocketUrl(jsonRpcUrl: URL, websocketUrl: URL): boolean {
 }
 
 export class SolanaCliConfig {
-  public static DEFAULT_PATH: string = "~/.config/solana/cli/config.yml";
+  public static DEFAULT_PATH: string = `${homedir()}/.config/solana/cli/config.yml`;
 
-  private _jsonRpcUrl: URL;
+  // allow public access in case more fine-grained control required
+  public _jsonRpcUrl: URL;
 
-  private _websocketUrl: URL;
+  public _websocketUrl: URL;
 
   public keypairPath: string;
 
@@ -52,12 +55,12 @@ export class SolanaCliConfig {
   public commitment: Commitment;
 
   get jsonRpcUrl(): string {
-    // omits trailing slash
+    // omits trailing slash (IMPORTANT)
     return this._jsonRpcUrl.origin;
   }
 
   get websocketUrl(): string {
-    // includes trailing slash
+    // includes trailing slash (IMPORTANT)
     return this._websocketUrl.href;
   }
 
@@ -100,9 +103,16 @@ export class SolanaCliConfig {
     };
   }
 
-  save(path: string = SolanaCliConfig.DEFAULT_PATH): void {
+  save(
+    path: string = SolanaCliConfig.DEFAULT_PATH,
+    overwrite: boolean = false,
+  ): void {
     const raw = this.toRaw();
-    writeFileSync(path, stringify(raw));
+    // directives true to include yaml start-of-doc `---`
+    writeFileSync(path, stringify(raw, { directives: true }), {
+      encoding: "utf-8",
+      flag: overwrite ? "w" : "wx",
+    });
   }
 
   loadKeypair(): Keypair {
