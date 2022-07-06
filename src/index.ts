@@ -33,11 +33,7 @@ function deriveWebsocketUrl(jsonRpcUrl: URL): URL {
 }
 
 function isDerivedWebsocketUrl(jsonRpcUrl: URL, websocketUrl: URL): boolean {
-  const portMatches =
-    (!jsonRpcUrl.port && jsonRpcUrl.port === websocketUrl.port) ||
-    (!!jsonRpcUrl.port &&
-      Number(jsonRpcUrl.port) + 1 === Number(websocketUrl.port));
-  return jsonRpcUrl.hostname === websocketUrl.hostname && portMatches;
+  return deriveWebsocketUrl(jsonRpcUrl).toJSON() === websocketUrl.toJSON();
 }
 
 export class SolanaCliConfig {
