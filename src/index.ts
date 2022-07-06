@@ -25,24 +25,23 @@ export const SOLANA_CLI_CONFIG_RAW_DEFAULT: SolanaCliConfigRaw = {
   commitment: "confirmed",
 };
 
-function deriveWebsocketUrl(jsonRpcUrl: URL): URL {
-  const protocol = jsonRpcUrl.protocol === "http:" ? "ws:" : "wss:";
-  const portString = jsonRpcUrl.port ? `:${Number(jsonRpcUrl.port) + 1}` : "";
+function deriveWebsocketUrl(jsonRpcUrl: string): string {
+  const url = new URL(jsonRpcUrl);
+  const protocol = url.protocol === "http:" ? "ws:" : "wss:";
+  const portString = url.port ? `:${Number(url.port) + 1}` : "";
   // Note trailing / (IMPORTANT)
-  return new URL(`${protocol}//${jsonRpcUrl.hostname}${portString}/`);
+  return `${protocol}//${url.hostname}${portString}/`;
 }
 
-function isDerivedWebsocketUrl(jsonRpcUrl: URL, websocketUrl: URL): boolean {
-  return deriveWebsocketUrl(jsonRpcUrl).toJSON() === websocketUrl.toJSON();
+function isDerivedWebsocketUrl(
+  jsonRpcUrl: string,
+  websocketUrl: string,
+): boolean {
+  return deriveWebsocketUrl(jsonRpcUrl) === websocketUrl;
 }
 
 export class SolanaCliConfig {
   public static DEFAULT_PATH: string = `${homedir()}/.config/solana/cli/config.yml`;
-
-  // allow public access in case more fine-grained control required
-  public _jsonRpcUrl: URL;
-
-  public _websocketUrl: URL;
 
   public keypairPath: string;
 
@@ -50,15 +49,9 @@ export class SolanaCliConfig {
 
   public commitment: Commitment;
 
-  get jsonRpcUrl(): string {
-    // omits trailing slash (IMPORTANT)
-    return this._jsonRpcUrl.origin;
-  }
+  public jsonRpcUrl: string;
 
-  get websocketUrl(): string {
-    // includes trailing slash (IMPORTANT)
-    return this._websocketUrl.href;
-  }
+  public websocketUrl: string;
 
   constructor({
     json_rpc_url,
@@ -67,10 +60,8 @@ export class SolanaCliConfig {
     address_labels,
     commitment,
   }: SolanaCliConfigRaw) {
-    this._jsonRpcUrl = new URL(json_rpc_url);
-    this._websocketUrl = websocket_url
-      ? new URL(websocket_url)
-      : deriveWebsocketUrl(this._jsonRpcUrl);
+    this.jsonRpcUrl = json_rpc_url;
+    this.websocketUrl = websocket_url || deriveWebsocketUrl(this.jsonRpcUrl);
     this.keypairPath = keypair_path;
     this.commitment = commitment;
     this.addressLabels = new Map(Object.entries(address_labels));
@@ -90,7 +81,7 @@ export class SolanaCliConfig {
   toRaw(): SolanaCliConfigRaw {
     return {
       json_rpc_url: this.jsonRpcUrl,
-      websocket_url: isDerivedWebsocketUrl(this._jsonRpcUrl, this._websocketUrl)
+      websocket_url: isDerivedWebsocketUrl(this.jsonRpcUrl, this.websocketUrl)
         ? ""
         : this.websocketUrl,
       keypair_path: this.keypairPath,
