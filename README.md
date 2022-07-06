@@ -10,7 +10,7 @@ No browser, intended for use in node.js based solana CLI applications.
 import { Connection, Keypair } from "@solana/web3.js";
 import { SolanaCliConfig } from "@soceanfi/solana-cli-config"
 
-// Load the solana CLI config file from the default path ($HOME/.config/solana/id.json)
+// Load the solana CLI config file from the default path ($HOME/.config/solana/cli/config.yml)
 const config = SolanaCliConfig.load();
 
 // Load the keypair from the file path specified in the config file
