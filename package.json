@@ -1,6 +1,6 @@
 {
   "name": "@soceanfi/solana-cli-config",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Typescript bindings for solana's CLI config (originally in Rust)",
   "author": "socean finance <socean@socean.fi>",
   "repository": "https://github.com/igneous-labs/solana-cli-config",
