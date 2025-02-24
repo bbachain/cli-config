@@ -1,5 +1,5 @@
 ---
-json_rpc_url: https://api.devnet.solana.com:8899
+json_rpc_url: https://api-testnet.bbachain.com:8899
 websocket_url: ""
 keypair_path: tests/loadKeypair/testKeypair.json
 address_labels:

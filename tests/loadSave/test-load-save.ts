@@ -2,7 +2,7 @@ import { expect } from "chai";
 import { readFileSync } from "fs";
 import { resolve } from "path";
 
-import { SolanaCliConfig } from "@";
+import { BBAChainCliConfig } from "@";
 
 type ConfigPaths = {
   loadPath: string;
@@ -26,8 +26,8 @@ describe("test cli config file loading and saving", () => {
   it("Can load and save a derived wss websocket path with no ports", () => {
     const paths = configPaths("deriveWsHttpsNoPort");
     const { loadPath, savePath } = paths;
-    const cfg = SolanaCliConfig.load(loadPath);
-    expect(cfg.websocketUrl).to.eq("wss://api.devnet.solana.com/");
+    const cfg = BBAChainCliConfig.load(loadPath);
+    expect(cfg.websocketUrl).to.eq("wss://api-testnet.bbachain.com/");
     cfg.save(savePath, true);
     checkSavedFileEq(paths);
   });
@@ -35,8 +35,8 @@ describe("test cli config file loading and saving", () => {
   it("Can load and save a derived wss websocket path with ports", () => {
     const paths = configPaths("deriveWsHttpsPort");
     const { loadPath, savePath } = paths;
-    const cfg = SolanaCliConfig.load(loadPath);
-    expect(cfg.websocketUrl).to.eq("wss://api.devnet.solana.com:8900/");
+    const cfg = BBAChainCliConfig.load(loadPath);
+    expect(cfg.websocketUrl).to.eq("wss://api-testnet.bbachain.com:8900/");
     cfg.save(savePath, true);
     checkSavedFileEq(paths);
   });
@@ -44,8 +44,8 @@ describe("test cli config file loading and saving", () => {
   it("Can load and save a derived ws websocket path with no ports", () => {
     const paths = configPaths("deriveWsHttpNoPort");
     const { loadPath, savePath } = paths;
-    const cfg = SolanaCliConfig.load(loadPath);
-    expect(cfg.websocketUrl).to.eq("ws://api.devnet.solana.com/");
+    const cfg = BBAChainCliConfig.load(loadPath);
+    expect(cfg.websocketUrl).to.eq("ws://api-testnet.bbachain.com/");
     cfg.save(savePath, true);
     checkSavedFileEq(paths);
   });
@@ -53,7 +53,7 @@ describe("test cli config file loading and saving", () => {
   it("Can load and save a derived ws websocket path with ports", () => {
     const paths = configPaths("deriveWsHttpPort");
     const { loadPath, savePath } = paths;
-    const cfg = SolanaCliConfig.load(loadPath);
+    const cfg = BBAChainCliConfig.load(loadPath);
     expect(cfg.websocketUrl).to.eq("ws://localhost:8900/");
     cfg.save(savePath, true);
     checkSavedFileEq(paths);
@@ -62,7 +62,7 @@ describe("test cli config file loading and saving", () => {
   it("Can load and save a non-derived wss websocket path", () => {
     const paths = configPaths("noDeriveWsHttps");
     const { loadPath, savePath } = paths;
-    const cfg = SolanaCliConfig.load(loadPath);
+    const cfg = BBAChainCliConfig.load(loadPath);
     cfg.save(savePath, true);
     checkSavedFileEq(paths);
   });
@@ -70,13 +70,13 @@ describe("test cli config file loading and saving", () => {
   it("Can load and save a non-derived ws websocket path", () => {
     const paths = configPaths("noDeriveWsHttp");
     const { loadPath, savePath } = paths;
-    const cfg = SolanaCliConfig.load(loadPath);
+    const cfg = BBAChainCliConfig.load(loadPath);
     cfg.save(savePath, true);
     checkSavedFileEq(paths);
   });
 
   it("Does not overwrite when overwrite is false", () => {
-    const cfg = SolanaCliConfig.default();
+    const cfg = BBAChainCliConfig.default();
     expect(() => cfg.save(resolve(__dirname, "dontOverwriteMe.yml"))).to.throw(
       "file already exists",
     );

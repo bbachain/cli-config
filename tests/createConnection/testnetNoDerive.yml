@@ -1,6 +1,6 @@
 ---
-json_rpc_url: https://api.devnet.solana.com
-websocket_url: wss://api.devnet.solana.com/
+json_rpc_url: https://api-testnet.bbachain.com
+websocket_url: wss://api-testnet.bbachain.com/
 keypair_path: tests/loadKeypair/testKeypair.json
 address_labels:
   "11111111111111111111111111111111": System Program

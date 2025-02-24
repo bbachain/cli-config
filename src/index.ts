@@ -1,5 +1,5 @@
-import type { Commitment } from "@solana/web3.js";
-import { Connection, Keypair } from "@solana/web3.js";
+import type { Commitment } from "@bbachain/web3.js";
+import { Connection, Keypair } from "@bbachain/web3.js";
 import { readFileSync, writeFileSync } from "fs";
 import { homedir } from "os";
 import { parse, stringify } from "yaml";
@@ -7,7 +7,7 @@ import { parse, stringify } from "yaml";
 /**
  * The raw config loaded from the yaml file
  */
-export type SolanaCliConfigRaw = {
+export type BBAChainCliConfigRaw = {
   json_rpc_url: string;
   websocket_url: string;
   keypair_path: string;
@@ -15,10 +15,10 @@ export type SolanaCliConfigRaw = {
   commitment: Commitment;
 };
 
-export const SOLANA_CLI_CONFIG_RAW_DEFAULT: SolanaCliConfigRaw = {
-  json_rpc_url: "https://api.mainnet-beta.solana.com",
+export const BBACHAIN_CLI_CONFIG_RAW_DEFAULT: BBAChainCliConfigRaw = {
+  json_rpc_url: "https://api-mainnet.bbachain.com",
   websocket_url: "",
-  keypair_path: "~/.config/solana/id.json",
+  keypair_path: "~/.bbachain/id.json",
   address_labels: {
     "11111111111111111111111111111111": "System Program",
   },
@@ -40,8 +40,8 @@ function isDerivedWebsocketUrl(
   return deriveWebsocketUrl(jsonRpcUrl) === websocketUrl;
 }
 
-export class SolanaCliConfig {
-  public static DEFAULT_PATH: string = `${homedir()}/.config/solana/cli/config.yml`;
+export class BBAChainCliConfig {
+  public static DEFAULT_PATH: string = `${homedir()}/.bbachain/cli/config.yml`;
 
   public keypairPath: string;
 
@@ -59,7 +59,7 @@ export class SolanaCliConfig {
     keypair_path,
     address_labels,
     commitment,
-  }: SolanaCliConfigRaw) {
+  }: BBAChainCliConfigRaw) {
     this.jsonRpcUrl = json_rpc_url;
     this.websocketUrl = websocket_url || deriveWebsocketUrl(this.jsonRpcUrl);
     this.keypairPath = keypair_path;
@@ -67,18 +67,20 @@ export class SolanaCliConfig {
     this.addressLabels = new Map(Object.entries(address_labels));
   }
 
-  static default(): SolanaCliConfig {
-    return new SolanaCliConfig(SOLANA_CLI_CONFIG_RAW_DEFAULT);
+  static default(): BBAChainCliConfig {
+    return new BBAChainCliConfig(BBACHAIN_CLI_CONFIG_RAW_DEFAULT);
   }
 
-  static load(path: string = SolanaCliConfig.DEFAULT_PATH): SolanaCliConfig {
+  static load(
+    path: string = BBAChainCliConfig.DEFAULT_PATH,
+  ): BBAChainCliConfig {
     const raw = parse(
       readFileSync(path, { encoding: "utf-8" }),
-    ) as SolanaCliConfigRaw;
-    return new SolanaCliConfig(raw);
+    ) as BBAChainCliConfigRaw;
+    return new BBAChainCliConfig(raw);
   }
 
-  toRaw(): SolanaCliConfigRaw {
+  toRaw(): BBAChainCliConfigRaw {
     return {
       json_rpc_url: this.jsonRpcUrl,
       websocket_url: isDerivedWebsocketUrl(this.jsonRpcUrl, this.websocketUrl)
@@ -91,7 +93,7 @@ export class SolanaCliConfig {
   }
 
   save(
-    path: string = SolanaCliConfig.DEFAULT_PATH,
+    path: string = BBAChainCliConfig.DEFAULT_PATH,
     overwrite: boolean = false,
   ): void {
     const raw = this.toRaw();

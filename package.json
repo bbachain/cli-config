@@ -1,14 +1,13 @@
 {
-  "name": "@soceanfi/solana-cli-config",
-  "version": "0.2.0",
-  "description": "Typescript bindings for solana's CLI config (originally in Rust)",
+  "name": "@bbachain/cli-config",
+  "version": "0.1.0",
+  "description": "Typescript bindings for bbachain's CLI config (originally in Rust)",
   "author": "socean finance <socean@socean.fi>",
-  "repository": "https://github.com/igneous-labs/solana-cli-config",
+  "repository": "https://github.com/bbachain/cli-config",
   "homepage": "https://socean.fi",
   "license": "MIT",
   "keywords": [
-    "socean.fi",
-    "solana",
+    "bbachain",
     "blockchain",
     "typescript",
     "CLI"
@@ -49,7 +48,7 @@
     "postbuild": "echo '{\"type\":\"commonjs\"}' | npx json > dist/cjs/package.json && echo '{\"type\":\"module\"} ' | npx json > dist/esm/package.json"
   },
   "devDependencies": {
-    "@solana/web3.js": "^1.47.3",
+    "@bbachain/web3.js": "^1.1.3",
     "@types/chai": "^4.3.1",
     "@types/mocha": "^9.1.0",
     "@types/node": "^17.0.18",
@@ -85,6 +84,6 @@
     "access": "public"
   },
   "peerDependencies": {
-    "@solana/web3.js": "^1"
+    "@bbachain/web3.js": "^1"
   }
 }

@@ -15,7 +15,7 @@
     "simple-import-sort/imports": [
       "error",
       {
-        "groups": [["^@solana", "^@?\\w"], ["^[^.]"]]
+        "groups": [["^@bbachain", "^@?\\w"], ["^[^.]"]]
       }
     ],
     "import/prefer-default-export": "off",

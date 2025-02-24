@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { resolve } from "path";
 
-import { SolanaCliConfig } from "@";
+import { BBAChainCliConfig } from "@";
 
 function sleep(ms: number): Promise<void> {
   return new Promise((res) => {
@@ -9,7 +9,7 @@ function sleep(ms: number): Promise<void> {
   });
 }
 
-async function checkConn(config: SolanaCliConfig): Promise<void> {
+async function checkConn(config: BBAChainCliConfig): Promise<void> {
   const conn = config.createConnection();
   // check rpc url with getBalance()
   const balance = await conn.getBalance(config.loadKeypair().publicKey);
@@ -32,13 +32,15 @@ async function checkConn(config: SolanaCliConfig): Promise<void> {
 }
 
 describe("test cli config file loading and saving", () => {
-  it("Devnet with no ports, derived ws", async () => {
-    const cfg = SolanaCliConfig.load(resolve(__dirname, "devnetDerive.yml"));
+  it("Testnet with no ports, derived ws", async () => {
+    const cfg = BBAChainCliConfig.load(resolve(__dirname, "testnetDerive.yml"));
     await checkConn(cfg);
   });
 
-  it("Devnet with ports, derived ws", async () => {
-    const cfg = SolanaCliConfig.load(resolve(__dirname, "devnetNoDerive.yml"));
+  it("Testnet with ports, derived ws", async () => {
+    const cfg = BBAChainCliConfig.load(
+      resolve(__dirname, "testnetNoDerive.yml"),
+    );
     await checkConn(cfg);
   });
 });
